@@ -27,7 +27,7 @@ export default function Search({ filterText, selectedIndex = 0, onRegisterAction
     debounceRef.current = setTimeout(async () => {
       try {
         const data = await searchStations(filterText);
-        setStations(data.filter((s) => s.lastcheckok === 1));
+        setStations(data);
       } catch {
         setStations([]);
       } finally {

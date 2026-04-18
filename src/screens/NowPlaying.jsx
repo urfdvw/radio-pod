@@ -1,6 +1,7 @@
 import TitleBar from '../components/TitleBar';
 import VolumeBar from '../components/VolumeBar';
 import QROverlay from '../components/QROverlay';
+import MarqueeText from '../components/MarqueeText';
 import { useAudio } from '../contexts/AudioContext';
 import { useStationList } from '../contexts/StationListContext';
 
@@ -37,12 +38,12 @@ export default function NowPlaying({ showQR }) {
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px 0' }}>
           <div style={{ padding: '4px 12px' }}>
             {position && <div style={{ fontSize: '0.7em', opacity: 0.7 }}>{position}</div>}
-            <div style={{ fontSize: '0.85em', fontWeight: 'bold', marginTop: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            <MarqueeText key={currentStation.stationuuid + '-name'} style={{ fontSize: '0.85em', fontWeight: 'bold', marginTop: '8px' }}>
               {currentStation.name}
-            </div>
-            <div style={{ fontSize: '0.7em', marginTop: '4px', opacity: 0.7, overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+            </MarqueeText>
+            <MarqueeText key={currentStation.stationuuid + '-desc'} style={{ fontSize: '0.7em', marginTop: '4px', opacity: 0.7 }}>
               {description}
-            </div>
+            </MarqueeText>
           </div>
           <VolumeBar volume={volume} />
         </div>

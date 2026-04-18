@@ -29,7 +29,7 @@ export default function StationResults({ endpoint, value, title, selectedIndex =
         if (!fetcher) throw new Error(`Unknown endpoint: ${endpoint}`);
         const data = await fetcher(value);
         if (!cancelled) {
-          setStations(data.filter((s) => s.lastcheckok === 1));
+          setStations(data);
           setLoading(false);
         }
       } catch (e) {
