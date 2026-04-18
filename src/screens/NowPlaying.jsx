@@ -5,19 +5,21 @@ import { useAudio } from '../contexts/AudioContext';
 import { useStationList } from '../contexts/StationListContext';
 
 export default function NowPlaying({ showQR }) {
-  const { currentStation, volume, error } = useAudio();
+  const { currentStation, volume, error, isPlaying, isSeeking } = useAudio();
   const { stations, getIndex } = useStationList();
 
   if (!currentStation) {
     return (
       <>
-        <TitleBar title="Now Playing" />
+        <TitleBar title="Paused" />
         <div style={{ padding: '20px', textAlign: 'center', fontSize: '0.8em' }}>
           No station selected
         </div>
       </>
     );
   }
+
+  const title = error ? 'No Signal' : isSeeking ? 'Seeking' : isPlaying ? 'Now Playing' : 'Paused';
 
   const index = getIndex(currentStation.stationuuid);
   const position = index >= 0 ? `${index + 1} of ${stations.length}` : '';
@@ -28,14 +30,13 @@ export default function NowPlaying({ showQR }) {
 
   return (
     <>
-      <TitleBar title="Now Playing" />
+      <TitleBar title={title} />
       {showQR ? (
         <QROverlay station={currentStation} />
       ) : (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px 0' }}>
           <div style={{ padding: '4px 12px' }}>
-            {error && <div style={{ fontSize: '0.7em', color: '#900', fontWeight: 'bold' }}>{error}</div>}
-            {position && !error && <div style={{ fontSize: '0.7em', opacity: 0.7 }}>{position}</div>}
+            {position && <div style={{ fontSize: '0.7em', opacity: 0.7 }}>{position}</div>}
             <div style={{ fontSize: '0.85em', fontWeight: 'bold', marginTop: '8px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
               {currentStation.name}
             </div>

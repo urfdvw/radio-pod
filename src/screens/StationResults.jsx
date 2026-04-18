@@ -54,8 +54,7 @@ export default function StationResults({ endpoint, value, title, selectedIndex =
   const handleSelect = useCallback(() => {
     const station = stations[clampedIndex];
     if (station) {
-      add(station);
-      play(station);
+      play(station, () => add(station));
       push(SCREENS.NOW_PLAYING);
     }
   }, [stations, clampedIndex, add, play, push]);

@@ -25,6 +25,32 @@
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
+/* Pixel art pause bars */
+.title-bar__pause-icon {
+  display: inline-block;
+  width: 3px;
+  height: 10px;
+  background: var(--lcd-text, #000);
+  box-shadow: 5px 0 0 var(--lcd-text, #000);
+}
+
+/* Pixel art stop square */
+.title-bar__stop-icon {
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  background: var(--lcd-text, #000);
+}
+
+/* Magnifying glass SVG icon */
+.title-bar__seek-icon {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  color: var(--lcd-text, #000);
+  vertical-align: middle;
+}
+
 .title-bar__title {
   flex: 1;
   text-align: center;

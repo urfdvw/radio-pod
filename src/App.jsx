@@ -95,20 +95,14 @@ function AppInner() {
     const idx = stations.findIndex((s) => s.stationuuid === currentStation.stationuuid);
     const prevIdx = idx <= 0 ? stations.length - 1 : idx - 1;
     play(stations[prevIdx]);
-    if (current.screen !== SCREENS.NOW_PLAYING) {
-      push(SCREENS.NOW_PLAYING);
-    }
-  }, [currentStation, stations, play, current.screen, push]);
+  }, [currentStation, stations, play]);
 
   const handleNext = useCallback(() => {
     if (!currentStation || stations.length === 0) return;
     const idx = stations.findIndex((s) => s.stationuuid === currentStation.stationuuid);
     const nextIdx = idx >= stations.length - 1 ? 0 : idx + 1;
     play(stations[nextIdx]);
-    if (current.screen !== SCREENS.NOW_PLAYING) {
-      push(SCREENS.NOW_PLAYING);
-    }
-  }, [currentStation, stations, play, current.screen, push]);
+  }, [currentStation, stations, play]);
 
   const handleMenu = useCallback(() => {
     clearFilter();

@@ -47,8 +47,7 @@ export default function Search({ filterText, selectedIndex = 0, onRegisterAction
   const handleSelect = useCallback(() => {
     const station = stations[clampedIndex];
     if (station) {
-      add(station);
-      play(station);
+      play(station, () => add(station));
       push(SCREENS.NOW_PLAYING);
     }
   }, [stations, clampedIndex, add, play, push]);
