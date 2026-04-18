@@ -10,7 +10,6 @@ export default function MarqueeText({ children, style }) {
   const [scrollDist, setScrollDist] = useState(0);
   const [phase, setPhase] = useState('pause'); // 'pause' | 'scrolling' | 'reset'
 
-  // Measure how many px the text overflows its container.
   useEffect(() => {
     const container = containerRef.current;
     const text = textRef.current;
@@ -26,12 +25,10 @@ export default function MarqueeText({ children, style }) {
     return () => ro.disconnect();
   }, [children]);
 
-  // Restart animation whenever measured overflow changes (e.g. new station).
   useEffect(() => {
     setPhase('pause');
   }, [scrollDist]);
 
-  // State machine: pause → scrolling → reset → pause → …
   useEffect(() => {
     if (scrollDist === 0) return; // text fits — no animation needed
 
@@ -42,13 +39,10 @@ export default function MarqueeText({ children, style }) {
       timer = setTimeout(() => setPhase('scrolling'), PAUSE_START_MS);
 
     } else if (phase === 'scrolling') {
-      // Wait for the CSS transition to finish, then hold at end for PAUSE_END_MS.
       const scrollMs = (scrollDist / SPEED_PX_PER_S) * 1000;
       timer = setTimeout(() => setPhase('reset'), scrollMs + PAUSE_END_MS);
 
     } else if (phase === 'reset') {
-      // Double RAF ensures the browser has painted the snapped-back frame
-      // before we restart the pause, preventing a visible transition flash.
       raf = requestAnimationFrame(() => {
         requestAnimationFrame(() => setPhase('pause'));
       });
@@ -60,14 +54,12 @@ export default function MarqueeText({ children, style }) {
     };
   }, [phase, scrollDist]);
 
-  // Derive transform and transition from phase.
   let translateX = 0;
   let transition = 'none';
   if (phase === 'scrolling') {
     translateX = -scrollDist;
     transition = `transform ${scrollDist / SPEED_PX_PER_S}s linear`;
   }
-  // 'pause' and 'reset' both sit at translateX 0 with no transition (instant snap).
 
   return (
     <div

@@ -1,27 +1,15 @@
 import { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
+import { DEFAULT_STATION } from '../constants/defaultStation';
 
 const AudioCtx = createContext(null);
-
-const DEFAULT_STATION = {
-  stationuuid: 'default-gotanno',
-  name: 'Radio Gotanno',
-  url: 'https://radio.gotanno.love/;?type=http&nocache=2997',
-  url_resolved: 'https://radio.gotanno.love/;?type=http&nocache=2997',
-  country: '',
-  language: '',
-  tags: '',
-};
 
 export function AudioProvider({ children }) {
   const audioRef = useRef(null);
   const noiseCtxRef = useRef(null);
   const noiseGainRef = useRef(null);
   const noiseSourceRef = useRef(null);
-  // Holds a cancel fn for any in-progress seek; null when idle.
   const seekAbortRef = useRef(null);
-  // Called once when the audio element fires 'playing' after a play() call.
   const onPlayingCbRef = useRef(null);
-  // Ref mirrors of state for use inside stable callbacks.
   const currentStationRef = useRef(DEFAULT_STATION);
   const volumeRef = useRef(0.7);
 
@@ -34,8 +22,10 @@ export function AudioProvider({ children }) {
   useEffect(() => { currentStationRef.current = currentStation; }, [currentStation]);
   useEffect(() => { volumeRef.current = volume; }, [volume]);
 
-  // Fade out and stop white noise. Nulls refs immediately so a subsequent
-  // createWhiteNoise() always starts fresh with no leftover source.
+  useEffect(() => {
+    return () => { noiseCtxRef.current?.close(); };
+  }, []);
+
   const stopWhiteNoise = useCallback(() => {
     const source = noiseSourceRef.current;
     const gain = noiseGainRef.current;
@@ -71,7 +61,6 @@ export function AudioProvider({ children }) {
     return { gain, ctx };
   }, []);
 
-  // isPlaying / error are driven entirely by audio element events.
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -88,7 +77,6 @@ export function AudioProvider({ children }) {
     const handlePause = () => setIsPlaying(false);
 
     const handleError = () => {
-      // If a seek is in progress, its abort fn handles cleanup.
       if (seekAbortRef.current) {
         seekAbortRef.current();
         seekAbortRef.current = null;
@@ -117,23 +105,14 @@ export function AudioProvider({ children }) {
     if (audioRef.current) audioRef.current.volume = clamped;
   }, []);
 
-  useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume;
-  }, [volume]);
-
-  // play(station, onSuccess?)
-  //   onSuccess is called only when the audio element confirms playback via
-  //   the 'playing' event — use this for side-effects like saving to list.
   const play = useCallback((station, onSuccess) => {
     const audio = audioRef.current;
     if (!audio) return;
 
-    // Cancel any pending seek. Its abort fn also stops white noise.
     if (seekAbortRef.current) {
       seekAbortRef.current();
       seekAbortRef.current = null;
     } else {
-      // No pending seek, but stop any stray noise just in case.
       stopWhiteNoise();
     }
 
@@ -143,13 +122,11 @@ export function AudioProvider({ children }) {
     onPlayingCbRef.current = onSuccess ?? null;
 
     if (isSameStation) {
-      // Resume / replay without seeking transition.
       audio.volume = volumeRef.current;
       audio.play().catch(() => setError('No Signal'));
       return;
     }
 
-    // Different station — seeking transition.
     setIsPlaying(false);
     setIsSeeking(true);
     audio.volume = 0;
@@ -180,7 +157,6 @@ export function AudioProvider({ children }) {
 
     const onCanPlay = () => endSeek(true);
     audio.addEventListener('canplay', onCanPlay);
-    // Always end seek after timeout — stopWhiteNoise called unconditionally.
     const timeoutId = setTimeout(() => endSeek(audio.readyState >= 3), 8000);
 
     seekAbortRef.current = () => {
@@ -194,7 +170,6 @@ export function AudioProvider({ children }) {
 
   const pause = useCallback(() => {
     audioRef.current?.pause();
-    // 'pause' event → setIsPlaying(false)
   }, []);
 
   const togglePlayPause = useCallback(() => {

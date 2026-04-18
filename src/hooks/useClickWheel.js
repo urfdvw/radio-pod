@@ -7,7 +7,6 @@ function getAngleDeg(cx, cy, x, y) {
   return Math.atan2(y - cy, x - cx) * (180 / Math.PI);
 }
 
-// Returns signed shortest-path difference a - b, in [-180, 180]
 function angleDiff(a, b) {
   let d = a - b;
   while (d > 180) d -= 360;
@@ -27,7 +26,6 @@ export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, o
   const ringState = useRef(null);
   const wheelRef = useRef(null);
 
-  // Mouse wheel → scroll ticks (passive: false required to preventDefault)
   useEffect(() => {
     const el = wheelRef.current;
     if (!el) return;

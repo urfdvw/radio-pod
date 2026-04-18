@@ -1,15 +1,14 @@
 import { useEffect, useCallback } from 'react';
 
-export function useKeyboard({ onUp, onDown, onLeft, onRight, onEnter, onScrollUp, onScrollDown, onChar }) {
+export function useKeyboard({ onUp, onDown, onLeft, onRight, onEnter, onScrollUp, onScrollDown }) {
   const handleKeyDown = useCallback((e) => {
     const isInput = e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA';
-    // When a text input is focused, only let Enter and Escape through for navigation.
     if (isInput && e.key !== 'Enter' && e.key !== 'Escape') return;
 
     switch (e.key) {
       case 'Escape':
         e.preventDefault();
-        onUp?.(); // same action as Menu / back
+        onUp?.();
         break;
       case 'ArrowUp':
         e.preventDefault();
@@ -39,17 +38,8 @@ export function useKeyboard({ onUp, onDown, onLeft, onRight, onEnter, onScrollUp
         e.preventDefault();
         onScrollUp?.();
         break;
-      case 'Backspace':
-        e.preventDefault();
-        onChar?.('BACKSPACE');
-        break;
-      default:
-        if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) {
-          onChar?.(e.key);
-        }
-        break;
     }
-  }, [onUp, onDown, onLeft, onRight, onEnter, onScrollUp, onScrollDown, onChar]);
+  }, [onUp, onDown, onLeft, onRight, onEnter, onScrollUp, onScrollDown]);
 
   useEffect(() => {
     window.addEventListener('keydown', handleKeyDown);

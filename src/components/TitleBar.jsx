@@ -11,14 +11,10 @@ function SeekIcon() {
   );
 }
 
-// searchProps: { value: string, onChange: (text) => void }
-// When provided, the title area becomes a real <input> for mobile keyboard support.
 export default function TitleBar({ title, searchProps }) {
   const { isPlaying, isSeeking, error } = useAudio();
   const inputRef = useRef(null);
 
-  // autoFocus loses the race against the pointer-up from the tap that triggered
-  // navigation. A short delay lets pointer events settle first.
   useEffect(() => {
     if (!searchProps) return;
     const id = setTimeout(() => inputRef.current?.focus(), 80);

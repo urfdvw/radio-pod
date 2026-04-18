@@ -1,8 +1,5 @@
 const BASE_URL = 'https://de1.api.radio-browser.info';
 
-// Common params applied to every station list query:
-//   hidebroken=true  — API excludes stations its checker marked offline
-//   lastcheckok=1    — double-filter: only stations whose last probe succeeded
 const STATION_DEFAULTS = { hidebroken: 'true', lastcheckok: '1', order: 'clickcount', reverse: 'true', limit: '100' };
 
 async function apiFetch(path, params = {}) {
@@ -17,7 +14,6 @@ async function apiFetch(path, params = {}) {
   return res.json();
 }
 
-// Additional client-side guard in case the API returns stale check results.
 function filterLive(stations) {
   return stations.filter((s) => s.lastcheckok === 1 && s.url_resolved);
 }

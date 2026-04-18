@@ -21,17 +21,19 @@ export default function Search({ filterText, onFilterChange, selectedIndex = 0, 
       return;
     }
     setLoading(true);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
+    clearTimeout(debounceRef.current);
+    let cancelled = false;
     debounceRef.current = setTimeout(async () => {
       try {
         const data = await searchStations(filterText);
-        setStations(data);
+        if (!cancelled) setStations(data);
       } catch {
-        setStations([]);
+        if (!cancelled) setStations([]);
       } finally {
-        setLoading(false);
+        if (!cancelled) setLoading(false);
       }
     }, 500);
+    return () => { cancelled = true; clearTimeout(debounceRef.current); };
   }, [filterText]);
 
   const items = stations.map((s) => ({

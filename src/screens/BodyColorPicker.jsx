@@ -10,6 +10,7 @@ export default function BodyColorPicker({ selectedIndex = 0, onRegisterActions }
   const items = IPOD_COLORS.map((color) => ({
     key: color.name,
     label: color.name,
+    value: color.value,
     hasSubmenu: false,
   }));
 
@@ -40,7 +41,7 @@ export default function BodyColorPicker({ selectedIndex = 0, onRegisterActions }
                 width: '12px',
                 height: '12px',
                 borderRadius: '50%',
-                background: IPOD_COLORS.find((c) => c.name === item.key)?.value,
+                background: item.value,
                 border: '1px solid rgba(0,0,0,0.3)',
               }} />
               {item.label}
