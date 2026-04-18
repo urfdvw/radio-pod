@@ -15,35 +15,19 @@
   width: 78%;
   height: auto;
   max-height: 100%;
+  touch-action: none;
 }
 
-.click-wheel__zone {
-  cursor: pointer;
-  transition: opacity 0.15s;
-  opacity: 0;
+.click-wheel__ring {
+  cursor: grab;
 }
 
-.click-wheel__zone--active {
-  opacity: 0.15;
-  fill: #000;
-}
-
-.click-wheel__zone--pressed {
-  opacity: 0.25;
-  fill: #000;
+.click-wheel__ring:active {
+  cursor: grabbing;
 }
 
 .click-wheel__center {
   cursor: pointer;
-  transition: filter 0.15s;
-}
-
-.click-wheel__center--active {
-  filter: brightness(0.92);
-}
-
-.click-wheel__center--pressed {
-  filter: brightness(0.85);
 }
 
 .click-wheel__label {

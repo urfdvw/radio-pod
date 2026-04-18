@@ -174,7 +174,6 @@ function AppInner() {
       </Screen>
       <ClickWheel
         onMenu={handleMenu}
-        onSelect={handleSelect}
         onPlayPause={togglePlayPause}
         onPrev={handlePrev}
         onNext={handleNext}
