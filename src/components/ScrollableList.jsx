@@ -38,6 +38,10 @@ export default function ScrollableList({ items, selectedIndex, onSelect, renderI
   const scrollRatio = total > visibleCount ? selectedIndex / (total - 1) : 0;
   const showScrollbar = total > visibleCount;
 
+  // Thumb height proportional to visible fraction; thumb top tracks scroll position.
+  const thumbH = Math.max(8, (visibleCount / total) * 100);
+  const thumbY = scrollRatio * (100 - thumbH);
+
   return (
     <div className="scrollable-list" ref={containerRef} role="listbox" aria-label="Menu items">
       <div className="scrollable-list__items">
@@ -67,7 +71,7 @@ export default function ScrollableList({ items, selectedIndex, onSelect, renderI
         <div className="scrollable-list__scrollbar" aria-hidden="true">
           <div
             className="scrollable-list__scrollbar-thumb"
-            style={{ top: `${scrollRatio * 80}%` }}
+            style={{ top: `${thumbY}%`, height: `${thumbH}%` }}
           />
         </div>
       )}
