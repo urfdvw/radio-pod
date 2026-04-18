@@ -23,14 +23,14 @@ import { SCREENS } from './constants/screens';
 import './App.css';
 
 function AppInner() {
-  const { current, push, pop } = useNavigation();
+  const { current, push, pop, reset } = useNavigation();
   const { play, togglePlayPause, setVolume, volume, currentStation } = useAudio();
   const { stations } = useStationList();
   const { setBrightness } = useSettings();
 
   const [selectedIndices, setSelectedIndices] = useState({});
   const [showQR, setShowQR] = useState(false);
-  const { filterText, handleChar, clearFilter } = useTypeToFilter();
+  const { filterText, setFilterText, clearFilter } = useTypeToFilter();
 
   // Ref to hold current screen's select/longPress actions and item count
   const screenActionsRef = useRef({ select: null, longPress: null, itemCount: 0 });
@@ -68,6 +68,9 @@ function AppInner() {
       setVolume(volume + delta * 0.05);
     } else if (screen === SCREENS.BRIGHTNESS_CONTROL) {
       setBrightness((prev) => Math.max(0, Math.min(100, prev + delta * 5)));
+    } else if (screenActionsRef.current.onScroll) {
+      // Screen owns its own scroll logic (e.g. confirm dialog option picker).
+      screenActionsRef.current.onScroll(delta);
     } else {
       const maxIndex = Math.max(0, (screenActionsRef.current.itemCount || 1) - 1);
       setSelectedIndex(screen, Math.max(0, Math.min(maxIndex, getSelectedIndex(screen) + delta)));
@@ -107,16 +110,17 @@ function AppInner() {
   const handleMenu = useCallback(() => {
     clearFilter();
     setShowQR(false);
-    pop();
-  }, [pop, clearFilter]);
-
-  const handleChar_ = useCallback((char) => {
-    const screen = current.screen;
-    if (screen === SCREENS.CATEGORY_LIST || screen === SCREENS.SEARCH) {
-      handleChar(char);
-      setSelectedIndex(screen, 0);
+    if (current.screen === SCREENS.NOW_PLAYING) {
+      reset();
+    } else {
+      pop();
     }
-  }, [current.screen, handleChar]);
+  }, [current.screen, pop, reset, clearFilter]);
+
+  const handleFilterChange = useCallback((text) => {
+    setFilterText(text);
+    setSelectedIndex(current.screen, 0);
+  }, [current.screen, setFilterText]);
 
   useKeyboard({
     onUp: handleMenu,
@@ -126,7 +130,6 @@ function AppInner() {
     onEnter: handleSelect,
     onScrollUp: () => handleScroll(-1),
     onScrollDown: () => handleScroll(1),
-    onChar: handleChar_,
   });
 
   // Callback for screens to register their actions
@@ -141,11 +144,11 @@ function AppInner() {
       case SCREENS.MAIN_MENU:
         return <MainMenu selectedIndex={si(SCREENS.MAIN_MENU)} onRegisterActions={registerActions} />;
       case SCREENS.CATEGORY_LIST:
-        return <CategoryList type={current.props.type} filterText={filterText} selectedIndex={si(SCREENS.CATEGORY_LIST)} onRegisterActions={registerActions} />;
+        return <CategoryList type={current.props.type} filterText={filterText} onFilterChange={handleFilterChange} selectedIndex={si(SCREENS.CATEGORY_LIST)} onRegisterActions={registerActions} />;
       case SCREENS.STATION_RESULTS:
         return <StationResults endpoint={current.props.endpoint} value={current.props.value} title={current.props.title} selectedIndex={si(SCREENS.STATION_RESULTS)} onRegisterActions={registerActions} />;
       case SCREENS.SEARCH:
-        return <Search filterText={filterText} selectedIndex={si(SCREENS.SEARCH)} onRegisterActions={registerActions} />;
+        return <Search filterText={filterText} onFilterChange={handleFilterChange} selectedIndex={si(SCREENS.SEARCH)} onRegisterActions={registerActions} />;
       case SCREENS.NOW_PLAYING:
         return <NowPlaying showQR={showQR} />;
       case SCREENS.STATION_LIST:

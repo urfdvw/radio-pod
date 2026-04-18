@@ -30,10 +30,14 @@ export function NavigationProvider({ children }) {
     dispatch({ type: 'POP' });
   }, []);
 
+  const reset = useCallback(() => {
+    dispatch({ type: 'RESET' });
+  }, []);
+
   const current = stack[stack.length - 1];
 
   return (
-    <NavigationContext.Provider value={{ stack, current, push, pop }}>
+    <NavigationContext.Provider value={{ stack, current, push, pop, reset }}>
       {children}
     </NavigationContext.Provider>
   );

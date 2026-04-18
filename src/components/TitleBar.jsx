@@ -1,3 +1,4 @@
+import { useRef, useEffect } from 'react';
 import { useAudio } from '../contexts/AudioContext';
 import './TitleBar.css';
 
@@ -10,8 +11,19 @@ function SeekIcon() {
   );
 }
 
-export default function TitleBar({ title }) {
+// searchProps: { value: string, onChange: (text) => void }
+// When provided, the title area becomes a real <input> for mobile keyboard support.
+export default function TitleBar({ title, searchProps }) {
   const { isPlaying, isSeeking, error } = useAudio();
+  const inputRef = useRef(null);
+
+  // autoFocus loses the race against the pointer-up from the tap that triggered
+  // navigation. A short delay lets pointer events settle first.
+  useEffect(() => {
+    if (!searchProps) return;
+    const id = setTimeout(() => inputRef.current?.focus(), 80);
+    return () => clearTimeout(id);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   let statusIcon;
   if (isSeeking) {
@@ -24,11 +36,29 @@ export default function TitleBar({ title }) {
     statusIcon = <span className="title-bar__status title-bar__pause-icon" aria-label="Paused" />;
   }
 
+  const titleContent = searchProps ? (
+    <input
+      ref={inputRef}
+      className="title-bar__search-input"
+      value={searchProps.value}
+      onChange={(e) => searchProps.onChange(e.target.value)}
+      placeholder={title}
+      autoCapitalize="none"
+      autoCorrect="off"
+      autoComplete="off"
+      spellCheck="false"
+      inputMode="search"
+      aria-label={title}
+    />
+  ) : (
+    <span className="title-bar__title">{title}</span>
+  );
+
   return (
     <div className="title-bar">
       <div className="title-bar__content">
         {statusIcon}
-        <span className="title-bar__title">{title}</span>
+        {titleContent}
         <span className="title-bar__battery" aria-label="Battery full" />
       </div>
       <div className="title-bar__divider" />

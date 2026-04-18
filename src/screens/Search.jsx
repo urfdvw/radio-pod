@@ -7,15 +7,13 @@ import { useStationList } from '../contexts/StationListContext';
 import { SCREENS } from '../constants/screens';
 import { searchStations } from '../services/radioBrowser';
 
-export default function Search({ filterText, selectedIndex = 0, onRegisterActions }) {
+export default function Search({ filterText, onFilterChange, selectedIndex = 0, onRegisterActions }) {
   const { push } = useNavigation();
   const { play } = useAudio();
   const { add } = useStationList();
   const [stations, setStations] = useState([]);
   const [loading, setLoading] = useState(false);
   const debounceRef = useRef(null);
-
-  const title = filterText || 'Search';
 
   useEffect(() => {
     if (!filterText || filterText.length < 2) {
@@ -58,7 +56,7 @@ export default function Search({ filterText, selectedIndex = 0, onRegisterAction
 
   return (
     <>
-      <TitleBar title={title} />
+      <TitleBar title="Search" searchProps={{ value: filterText, onChange: onFilterChange }} />
       {loading ? (
         <div style={{ padding: '20px', textAlign: 'center', fontSize: '0.8em' }}>Searching...</div>
       ) : items.length === 0 ? (

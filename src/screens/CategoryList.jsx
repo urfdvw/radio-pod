@@ -17,13 +17,12 @@ const ENDPOINTS = {
   tags: 'tag',
 };
 
-export default function CategoryList({ type, filterText, selectedIndex = 0, onRegisterActions }) {
+export default function CategoryList({ type, filterText, onFilterChange, selectedIndex = 0, onRegisterActions }) {
   const { push } = useNavigation();
   const { countries, languages, tags, isLoading, error } = useRadioBrowser();
 
   const data = type === 'countries' ? countries : type === 'languages' ? languages : tags;
   const baseTitle = TITLES[type] || type;
-  const title = filterText ? `${baseTitle}: ${filterText}` : baseTitle;
 
   const filtered = useMemo(() => {
     if (!filterText) return data;
@@ -54,10 +53,12 @@ export default function CategoryList({ type, filterText, selectedIndex = 0, onRe
     onRegisterActions?.({ select: handleSelect, longPress: null, itemCount: items.length });
   }, [onRegisterActions, handleSelect, items.length]);
 
+  const searchProps = { value: filterText, onChange: onFilterChange };
+
   if (isLoading) {
     return (
       <>
-        <TitleBar title={title} />
+        <TitleBar title={baseTitle} searchProps={searchProps} />
         <div style={{ padding: '20px', textAlign: 'center', fontSize: '0.8em' }}>Loading...</div>
       </>
     );
@@ -66,7 +67,7 @@ export default function CategoryList({ type, filterText, selectedIndex = 0, onRe
   if (error) {
     return (
       <>
-        <TitleBar title={title} />
+        <TitleBar title={baseTitle} searchProps={searchProps} />
         <div style={{ padding: '20px', textAlign: 'center', fontSize: '0.8em' }}>No Connection</div>
       </>
     );
@@ -74,7 +75,7 @@ export default function CategoryList({ type, filterText, selectedIndex = 0, onRe
 
   return (
     <>
-      <TitleBar title={title} />
+      <TitleBar title={baseTitle} searchProps={searchProps} />
       {items.length === 0 ? (
         <div style={{ padding: '20px', textAlign: 'center', fontSize: '0.8em' }}>No Results</div>
       ) : (

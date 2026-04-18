@@ -12,6 +12,7 @@ export default function StationList({ selectedIndex = 0, onRegisterActions }) {
   const { play } = useAudio();
   const { push } = useNavigation();
   const [confirmDelete, setConfirmDelete] = useState(null);
+  const [confirmOption, setConfirmOption] = useState(0); // 0 = Cancel, 1 = Delete
 
   const items = stations.map((s) => ({
     key: s.stationuuid,
@@ -23,8 +24,9 @@ export default function StationList({ selectedIndex = 0, onRegisterActions }) {
 
   const handleSelect = useCallback(() => {
     if (confirmDelete) {
-      // In confirm dialog: select = cancel (default option)
+      if (confirmOption === 1) remove(confirmDelete.stationuuid);
       setConfirmDelete(null);
+      setConfirmOption(0);
       return;
     }
     const station = stations[clampedIndex];
@@ -32,24 +34,29 @@ export default function StationList({ selectedIndex = 0, onRegisterActions }) {
       play(station);
       push(SCREENS.NOW_PLAYING);
     }
-  }, [confirmDelete, stations, clampedIndex, play, push]);
+  }, [confirmDelete, confirmOption, remove, stations, clampedIndex, play, push]);
 
   const handleLongPress = useCallback(() => {
-    if (confirmDelete) {
-      // In confirm dialog: long press = confirm delete
-      remove(confirmDelete.stationuuid);
-      setConfirmDelete(null);
-      return;
-    }
+    if (confirmDelete) return;
     const station = stations[clampedIndex];
     if (station) {
+      setConfirmOption(0); // always start on Cancel
       setConfirmDelete(station);
     }
-  }, [confirmDelete, remove, stations, clampedIndex]);
+  }, [confirmDelete, stations, clampedIndex]);
 
   useEffect(() => {
-    onRegisterActions?.({ select: handleSelect, longPress: handleLongPress, itemCount: items.length });
-  }, [onRegisterActions, handleSelect, handleLongPress, items.length]);
+    if (confirmDelete) {
+      onRegisterActions?.({
+        select: handleSelect,
+        longPress: null,
+        itemCount: 2,
+        onScroll: (d) => setConfirmOption((prev) => Math.max(0, Math.min(1, prev + d))),
+      });
+    } else {
+      onRegisterActions?.({ select: handleSelect, longPress: handleLongPress, itemCount: items.length });
+    }
+  }, [onRegisterActions, handleSelect, handleLongPress, items.length, confirmDelete]);
 
   if (confirmDelete) {
     return (
@@ -57,12 +64,9 @@ export default function StationList({ selectedIndex = 0, onRegisterActions }) {
         <TitleBar title="Station List" />
         <ConfirmDialog
           message={`Delete "${confirmDelete.name}"?`}
-          selectedOption={0}
-          onConfirm={() => {
-            remove(confirmDelete.stationuuid);
-            setConfirmDelete(null);
-          }}
-          onCancel={() => setConfirmDelete(null)}
+          selectedOption={confirmOption}
+          onConfirm={() => { remove(confirmDelete.stationuuid); setConfirmDelete(null); setConfirmOption(0); }}
+          onCancel={() => { setConfirmDelete(null); setConfirmOption(0); }}
         />
       </>
     );

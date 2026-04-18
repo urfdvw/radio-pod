@@ -59,6 +59,25 @@
   white-space: nowrap;
 }
 
+.title-bar__search-input {
+  flex: 1;
+  min-width: 0;
+  background: transparent;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  color: inherit;
+  text-align: center;
+  padding: 0;
+}
+
+.title-bar__search-input::placeholder {
+  color: inherit;
+  opacity: 0.45;
+}
+
 /* Pixel art battery icon */
 .title-bar__battery {
   display: inline-block;
