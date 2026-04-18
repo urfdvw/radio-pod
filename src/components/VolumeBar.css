@@ -1,0 +1,29 @@
+.volume-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  color: var(--lcd-text, #000);
+}
+
+.volume-bar__icon {
+  flex-shrink: 0;
+  width: 12px;
+  height: 12px;
+}
+
+.volume-bar__icon--loud {
+  width: 18px;
+}
+
+.volume-bar__track {
+  flex: 1;
+  height: 8px;
+  border: 2px solid var(--lcd-text, #000);
+  background: transparent;
+}
+
+.volume-bar__fill {
+  height: 100%;
+  background: var(--lcd-text, #000);
+}

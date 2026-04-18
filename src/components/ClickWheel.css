@@ -1,0 +1,52 @@
+.click-wheel {
+  /*
+   * Real iPod Mini click wheel: ~40mm diameter in a 51mm wide body.
+   * That's ~78% of body width.
+   * Vertically centered in the bottom ~52% of the body.
+   */
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+}
+
+.click-wheel__svg {
+  width: 78%;
+  height: auto;
+  max-height: 100%;
+}
+
+.click-wheel__zone {
+  cursor: pointer;
+  transition: opacity 0.15s;
+  opacity: 0;
+}
+
+.click-wheel__zone--active {
+  opacity: 0.15;
+  fill: #000;
+}
+
+.click-wheel__zone--pressed {
+  opacity: 0.25;
+  fill: #000;
+}
+
+.click-wheel__center {
+  cursor: pointer;
+  transition: filter 0.15s;
+}
+
+.click-wheel__center--active {
+  filter: brightness(0.92);
+}
+
+.click-wheel__center--pressed {
+  filter: brightness(0.85);
+}
+
+.click-wheel__label {
+  font-family: 'Silkscreen', 'Chicago', monospace;
+  user-select: none;
+}

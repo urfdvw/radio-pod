@@ -1,0 +1,21 @@
+@import url('https://fonts.googleapis.com/css2?family=Silkscreen&display=swap');
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+  overflow: hidden;
+  background: #1a1a1a;
+  font-family: 'Silkscreen', monospace;
+}
+
+#root {
+  height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

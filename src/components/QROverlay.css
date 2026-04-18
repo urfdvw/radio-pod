@@ -1,0 +1,25 @@
+.qr-overlay {
+  position: absolute;
+  inset: 0;
+  top: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--lcd-bg, #b8b8b0);
+  z-index: 10;
+}
+
+.qr-overlay__code {
+  padding: 12px;
+}
+
+.qr-overlay__name {
+  font-size: 0.75em;
+  text-align: center;
+  padding: 0 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 90%;
+}

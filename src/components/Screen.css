@@ -1,0 +1,20 @@
+.screen {
+  /*
+   * Real iPod Mini screen: 138x110 pixels, landscape (wider than tall).
+   * Screen takes up most of the body width with small bezels on sides.
+   */
+  aspect-ratio: 138 / 110;
+  width: 82%;
+  align-self: center;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #555;
+  border-radius: 2px;
+  margin-top: 8%;
+  overflow: hidden;
+  position: relative;
+  font-family: 'Silkscreen', 'Chicago', 'Courier New', monospace;
+  font-size: 28px;
+  min-height: 0;
+}

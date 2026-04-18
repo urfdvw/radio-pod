@@ -1,0 +1,67 @@
+.title-bar {
+  flex-shrink: 0;
+}
+
+.title-bar__content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 4px 8px;
+  font-size: 0.85em;
+  font-weight: bold;
+}
+
+.title-bar__status {
+  margin-right: 4px;
+  font-size: 0.75em;
+}
+
+/* Pixel art play triangle */
+.title-bar__play-icon {
+  display: inline-block;
+  width: 8px;
+  height: 10px;
+  background: var(--lcd-text, #000);
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.title-bar__title {
+  flex: 1;
+  text-align: center;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Pixel art battery icon */
+.title-bar__battery {
+  display: inline-block;
+  width: 16px;
+  height: 8px;
+  border: 2px solid var(--lcd-text, #000);
+  position: relative;
+  margin-left: 4px;
+}
+
+.title-bar__battery::before {
+  content: '';
+  position: absolute;
+  inset: 1px;
+  background: var(--lcd-text, #000);
+}
+
+.title-bar__battery::after {
+  content: '';
+  position: absolute;
+  right: -4px;
+  top: 1px;
+  width: 2px;
+  height: 4px;
+  background: var(--lcd-text, #000);
+}
+
+.title-bar__divider {
+  height: 1px;
+  background: var(--lcd-text, #000);
+  opacity: 0.4;
+}
