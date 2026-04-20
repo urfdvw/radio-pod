@@ -170,10 +170,6 @@ export function AudioProvider({ children }) {
     };
   }, [createWhiteNoise, stopWhiteNoise]);
 
-  const pause = useCallback(() => {
-    audioRef.current?.pause();
-  }, []);
-
   const togglePlayPause = useCallback(() => {
     const audio = audioRef.current;
     if (!audio || !currentStationRef.current) return;
@@ -187,7 +183,7 @@ export function AudioProvider({ children }) {
   return (
     <AudioCtx.Provider value={{
       currentStation, isPlaying, isSeeking, volume, error,
-      play, pause, togglePlayPause, setVolume, setError,
+      play, togglePlayPause, setVolume,
     }}>
       <audio ref={audioRef} />
       {children}

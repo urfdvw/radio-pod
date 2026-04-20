@@ -24,6 +24,7 @@ export default function Screen({ children }) {
       className="screen"
       style={{
         '--lcd-bg': bgColor,
+        '--lcd-bg-raw': `${r}, ${gray}, ${blue}`,
         '--lcd-text': '#000',
         background: bgColor,
         color: '#000',

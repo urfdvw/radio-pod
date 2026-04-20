@@ -12,6 +12,7 @@ const MENU_ITEMS = [
   { key: 'language', label: 'Language', screen: SCREENS.CATEGORY_LIST, props: { type: 'languages' }, hasSubmenu: true },
   { key: 'tags', label: 'Tags', screen: SCREENS.CATEGORY_LIST, props: { type: 'tags' }, hasSubmenu: true },
   { key: 'search', label: 'Search', screen: SCREENS.SEARCH, hasSubmenu: true },
+  { key: 'qr-scanner', label: 'QR Scanner', screen: SCREENS.QR_SCANNER, hasSubmenu: false },
   { key: 'settings', label: 'Settings', screen: SCREENS.SETTINGS, hasSubmenu: true },
 ];
 

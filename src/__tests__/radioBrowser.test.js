@@ -52,7 +52,7 @@ describe('radioBrowser service', () => {
   });
 
   it('searchStations passes the query', async () => {
-    const mockData = [{ stationuuid: '1', name: 'Jazz FM' }];
+    const mockData = [{ stationuuid: '1', name: 'Jazz FM', lastcheckok: 1, url_resolved: 'http://example.com/stream' }];
     vi.spyOn(globalThis, 'fetch').mockResolvedValue({
       ok: true,
       json: () => Promise.resolve(mockData),

@@ -16,6 +16,7 @@ import StationList from './screens/StationList';
 import Settings from './screens/Settings';
 import BrightnessControl from './screens/BrightnessControl';
 import BodyColorPicker from './screens/BodyColorPicker';
+import QRScanner from './screens/QRScanner';
 import { useKeyboard } from './hooks/useKeyboard';
 import { useTypeToFilter } from './hooks/useTypeToFilter';
 import { useLongPress } from './hooks/useLongPress';
@@ -74,10 +75,14 @@ function AppInner() {
   }, [current.screen]);
 
   const handleLongPress = useCallback(() => {
+    if (current.screen === SCREENS.NOW_PLAYING) {
+      push(SCREENS.QR_SCANNER);
+      return;
+    }
     if (screenActionsRef.current.longPress) {
       screenActionsRef.current.longPress();
     }
-  }, []);
+  }, [current.screen, push]);
 
   const { onPressStart, onPressEnd } = useLongPress(handleSelect, handleLongPress);
 
@@ -107,7 +112,7 @@ function AppInner() {
 
   const handleFilterChange = useCallback((text) => {
     setFilterText(text);
-    setSelectedIndex(current.screen, 0);
+    setSelectedIndices((prev) => ({ ...prev, [current.screen]: 0 }));
   }, [current.screen, setFilterText]);
 
   useKeyboard({
@@ -147,6 +152,8 @@ function AppInner() {
         return <BrightnessControl />;
       case SCREENS.BODY_COLOR_PICKER:
         return <BodyColorPicker selectedIndex={si(SCREENS.BODY_COLOR_PICKER)} onRegisterActions={registerActions} />;
+      case SCREENS.QR_SCANNER:
+        return <QRScanner />;
       default:
         return <MainMenu selectedIndex={0} onRegisterActions={registerActions} />;
     }

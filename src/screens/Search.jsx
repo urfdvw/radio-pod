@@ -21,7 +21,6 @@ export default function Search({ filterText, onFilterChange, selectedIndex = 0, 
       return;
     }
     setLoading(true);
-    clearTimeout(debounceRef.current);
     let cancelled = false;
     debounceRef.current = setTimeout(async () => {
       try {
