@@ -29,25 +29,30 @@ export default function NowPlaying({ showQR }) {
     .filter(Boolean)
     .join(' \u00B7 ');
 
+  if (showQR) {
+    return (
+      <>
+        <TitleBar title={currentStation.name} plain />
+        <QROverlay station={currentStation} />
+      </>
+    );
+  }
+
   return (
     <>
       <TitleBar title={title} />
-      {showQR ? (
-        <QROverlay station={currentStation} />
-      ) : (
-        <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px 0' }}>
-          <div style={{ padding: '4px 12px' }}>
-            {position && <div style={{ fontSize: '0.7em', opacity: 0.7 }}>{position}</div>}
-            <MarqueeText key={currentStation.stationuuid + '-name'} style={{ fontSize: '0.85em', fontWeight: 'bold', marginTop: '8px' }}>
-              {currentStation.name}
-            </MarqueeText>
-            <MarqueeText key={currentStation.stationuuid + '-desc'} style={{ fontSize: '0.7em', marginTop: '4px', opacity: 0.7 }}>
-              {description}
-            </MarqueeText>
-          </div>
-          <VolumeBar volume={volume} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '8px 0' }}>
+        <div style={{ padding: '4px 12px' }}>
+          {position && <div style={{ fontSize: '0.7em', opacity: 0.7 }}>{position}</div>}
+          <MarqueeText key={currentStation.stationuuid + '-name'} style={{ fontSize: '0.85em', fontWeight: 'bold', marginTop: '8px' }}>
+            {currentStation.name}
+          </MarqueeText>
+          <MarqueeText key={currentStation.stationuuid + '-desc'} style={{ fontSize: '0.7em', marginTop: '4px', opacity: 0.7 }}>
+            {description}
+          </MarqueeText>
         </div>
-      )}
+        <VolumeBar volume={volume} />
+      </div>
     </>
   );
 }

@@ -11,7 +11,7 @@ function SeekIcon() {
   );
 }
 
-export default function TitleBar({ title, searchProps }) {
+export default function TitleBar({ title, searchProps, plain }) {
   const { isPlaying, isSeeking, error } = useAudio();
   const inputRef = useRef(null);
 
@@ -20,6 +20,17 @@ export default function TitleBar({ title, searchProps }) {
     const id = setTimeout(() => inputRef.current?.focus(), 80);
     return () => clearTimeout(id);
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  if (plain) {
+    return (
+      <div className="title-bar">
+        <div className="title-bar__content">
+          <span className="title-bar__title">{title}</span>
+        </div>
+        <div className="title-bar__divider" />
+      </div>
+    );
+  }
 
   let statusIcon;
   if (isSeeking) {
