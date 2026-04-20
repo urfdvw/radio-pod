@@ -21,6 +21,7 @@ import { useKeyboard } from './hooks/useKeyboard';
 import { useTypeToFilter } from './hooks/useTypeToFilter';
 import { useLongPress } from './hooks/useLongPress';
 import { SCREENS } from './constants/screens';
+import { isIOS } from './utils/platform';
 import './App.css';
 
 function AppInner() {
@@ -54,7 +55,7 @@ function AppInner() {
   const handleScroll = (delta) => {
     const screen = current.screen;
     if (screen === SCREENS.NOW_PLAYING) {
-      setVolume(volume + delta * 0.05);
+      if (!isIOS()) setVolume(volume + delta * 0.05);
     } else if (screen === SCREENS.BRIGHTNESS_CONTROL) {
       setBrightness((prev) => Math.max(0, Math.min(100, prev + delta * 5)));
     } else if (screenActionsRef.current.onScroll) {

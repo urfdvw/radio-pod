@@ -1,5 +1,6 @@
 import { useClickWheel } from '../hooks/useClickWheel';
 import { useSettings } from '../contexts/SettingsContext';
+import { useUiSound } from '../hooks/useUiSound';
 import { IPOD_COLORS } from '../constants/colors';
 import './ClickWheel.css';
 
@@ -38,8 +39,9 @@ function PlayPauseIcon({ cx, cy }) {
 }
 
 export default function ClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, onSelectStart, onSelectEnd }) {
-  const { bodyColor } = useSettings();
+  const { bodyColor, uiSound } = useSettings();
   const colorConfig = IPOD_COLORS.find((c) => c.name === bodyColor) || IPOD_COLORS[0];
+  const playSound = useUiSound(uiSound);
 
   const {
     wheelRef,
@@ -49,11 +51,11 @@ export default function ClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScro
     onRingPointerCancel,
     onCenterPointerDown,
     onCenterPointerUp,
-  } = useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, onSelectStart, onSelectEnd });
+  } = useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, onSelectStart, onSelectEnd, onSound: playSound });
 
   return (
     <div className="click-wheel" ref={wheelRef} aria-label="Click wheel">
-      <svg viewBox="0 0 300 300" className="click-wheel__svg" focusable="false">
+      <svg viewBox="0 0 300 300" className="click-wheel__svg" focusable="false" onContextMenu={(e) => e.preventDefault()}>
         {/* Outer ring — rotation + zone clicks */}
         <circle
           cx="150" cy="150" r="140"

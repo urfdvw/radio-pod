@@ -10,8 +10,7 @@ let vibrateReady = false;
 
 function vibrate(ms) {
   if (!navigator.vibrate || !vibrateReady) return;
-  const fired = navigator.vibrate(ms);
-  console.log(`[vibrate] ${ms}ms${fired ? '' : ' (blocked)'}`);
+  navigator.vibrate(ms);
 }
 
 function getAngleDeg(cx, cy, x, y) {
@@ -33,7 +32,7 @@ function getZoneFromAngle(angle) {
   return 'prev';
 }
 
-export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, onSelectStart, onSelectEnd }) {
+export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, onSelectStart, onSelectEnd, onSound }) {
   const ringState = useRef(null);
   const wheelRef = useRef(null);
 
@@ -56,7 +55,8 @@ export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, o
     const angle = getAngleDeg(cx, cy, e.clientX, e.clientY);
     ringState.current = { cx, cy, startAngle: angle, lastAngle: angle, totalDelta: 0, accum: 0 };
     vibrate(10);
-  }, []);
+    onSound?.();
+  }, [onSound]);
 
   const onRingPointerMove = useCallback((e) => {
     const state = ringState.current;
@@ -71,15 +71,17 @@ export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, o
       onScroll?.(1);
       state.accum -= DEGREES_PER_TICK;
       vibrate(8);
+      onSound?.();
     }
     while (state.accum <= -DEGREES_PER_TICK) {
       onScroll?.(-1);
       state.accum += DEGREES_PER_TICK;
       vibrate(8);
+      onSound?.();
     }
-  }, [onScroll]);
+  }, [onScroll, onSound]);
 
-  const onRingPointerUp = useCallback((e) => {
+  const onRingPointerUp = useCallback(() => {
     vibrateReady = true;
     const state = ringState.current;
     ringState.current = null;
@@ -102,8 +104,9 @@ export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, o
   const onCenterPointerDown = useCallback((e) => {
     e.stopPropagation();
     vibrate(10);
+    onSound?.();
     onSelectStart?.();
-  }, [onSelectStart]);
+  }, [onSelectStart, onSound]);
 
   const onCenterPointerUp = useCallback((e) => {
     e.stopPropagation();

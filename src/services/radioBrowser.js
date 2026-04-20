@@ -8,7 +8,7 @@ async function apiFetch(path, params = {}) {
     if (v !== undefined && v !== null) url.searchParams.set(k, v);
   });
   const res = await fetch(url.toString(), {
-    headers: { 'User-Agent': 'RadioPod/1.0' },
+    headers: { 'User-Agent': 'RadioMini/1.0' },
   });
   if (!res.ok) throw new Error(`API error: ${res.status}`);
   return res.json();

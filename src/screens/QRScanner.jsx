@@ -60,7 +60,7 @@ export default function QRScanner() {
             return;
           }
         } catch {
-          // not a valid RadioPod QR — keep scanning
+          // not a valid RadioMini QR — keep scanning
         }
       }
 

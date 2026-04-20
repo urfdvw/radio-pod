@@ -39,7 +39,7 @@ export default function MainMenu({ selectedIndex = 0, onRegisterActions }) {
 
   return (
     <>
-      <TitleBar title="RadioPod" />
+      <TitleBar title="RadioMini" />
       <ScrollableList
         items={visibleItems}
         selectedIndex={clampedIndex}

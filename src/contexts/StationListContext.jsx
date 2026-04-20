@@ -5,7 +5,7 @@ import { DEFAULT_STATION } from '../constants/defaultStation';
 const StationListContext = createContext(null);
 
 export function StationListProvider({ children }) {
-  const [stations, setStations] = useLocalStorage('radiopod-stations', [DEFAULT_STATION]);
+  const [stations, setStations] = useLocalStorage('RadioMini-stations', [DEFAULT_STATION]);
 
   const add = useCallback((station) => {
     setStations((prev) => {

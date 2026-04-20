@@ -66,7 +66,7 @@ describe('StationListContext', () => {
     act(() => {
       result.current.add(station1);
     });
-    const stored = JSON.parse(localStorage.getItem('radiopod-stations'));
+    const stored = JSON.parse(localStorage.getItem('RadioMini-stations'));
     expect(stored).toHaveLength(2);
     expect(stored[1].stationuuid).toBe('1');
   });

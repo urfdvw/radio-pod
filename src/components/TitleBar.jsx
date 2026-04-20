@@ -19,8 +19,8 @@ export default function TitleBar({ title, searchProps, plain }) {
 
   useEffect(() => {
     if (!searchProps) return;
-    const id = setTimeout(() => inputRef.current?.focus(), 80);
-    return () => clearTimeout(id);
+    // iOS ignores focus() outside a direct gesture; placeholder guides them
+    inputRef.current?.focus();
   }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (plain) {
@@ -51,7 +51,7 @@ export default function TitleBar({ title, searchProps, plain }) {
       className="title-bar__search-input"
       value={searchProps.value}
       onChange={(e) => searchProps.onChange(e.target.value)}
-      placeholder={title}
+      placeholder="Type here..."
       autoCapitalize="none"
       autoCorrect="off"
       autoComplete="off"
