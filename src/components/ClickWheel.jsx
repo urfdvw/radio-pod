@@ -53,7 +53,7 @@ export default function ClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScro
 
   return (
     <div className="click-wheel" ref={wheelRef} aria-label="Click wheel">
-      <svg viewBox="0 0 300 300" className="click-wheel__svg">
+      <svg viewBox="0 0 300 300" className="click-wheel__svg" focusable="false">
         {/* Outer ring — rotation + zone clicks */}
         <circle
           cx="150" cy="150" r="140"
@@ -92,8 +92,6 @@ export default function ClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScro
           className="click-wheel__center"
           onPointerDown={onCenterPointerDown}
           onPointerUp={onCenterPointerUp}
-          role="button"
-          aria-label="Select"
         />
       </svg>
     </div>
