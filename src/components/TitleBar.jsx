@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react';
 import { useAudio } from '../contexts/AudioContext';
+import { useBattery } from '../hooks/useBattery';
 import './TitleBar.css';
 
 function SeekIcon() {
@@ -13,6 +14,7 @@ function SeekIcon() {
 
 export default function TitleBar({ title, searchProps, plain }) {
   const { isPlaying, isSeeking, error } = useAudio();
+  const batteryInfo = useBattery();
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -66,7 +68,11 @@ export default function TitleBar({ title, searchProps, plain }) {
       <div className="title-bar__content">
         {statusIcon}
         {titleContent}
-        <span className="title-bar__battery" aria-label="Battery full" />
+        <span
+          className={`title-bar__battery${batteryInfo?.charging ? ' title-bar__battery--charging' : ''}`}
+          style={{ '--battery-level': batteryInfo ? batteryInfo.level : 1 }}
+          aria-label={batteryInfo ? `Battery ${Math.round(batteryInfo.level * 100)}%${batteryInfo.charging ? ' charging' : ''}` : 'Battery'}
+        />
       </div>
       <div className="title-bar__divider" />
     </div>
