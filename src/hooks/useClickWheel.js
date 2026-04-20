@@ -3,6 +3,17 @@ import { useRef, useCallback, useEffect } from 'react';
 const ROTATION_THRESHOLD_DEG = 8;
 const DEGREES_PER_TICK = 10;
 
+// Chrome blocks navigator.vibrate until the frame has received a committed
+// pointer-up gesture. Track readiness with a module-level flag so we never
+// call vibrate before the browser allows it (avoids the [Intervention] log).
+let vibrateReady = false;
+
+function vibrate(ms) {
+  if (!navigator.vibrate || !vibrateReady) return;
+  const fired = navigator.vibrate(ms);
+  console.log(`[vibrate] ${ms}ms${fired ? '' : ' (blocked)'}`);
+}
+
 function getAngleDeg(cx, cy, x, y) {
   return Math.atan2(y - cy, x - cx) * (180 / Math.PI);
 }
@@ -44,6 +55,7 @@ export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, o
     const cy = svgRect.top + svgRect.height / 2;
     const angle = getAngleDeg(cx, cy, e.clientX, e.clientY);
     ringState.current = { cx, cy, startAngle: angle, lastAngle: angle, totalDelta: 0, accum: 0 };
+    vibrate(10);
   }, []);
 
   const onRingPointerMove = useCallback((e) => {
@@ -58,14 +70,17 @@ export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, o
     while (state.accum >= DEGREES_PER_TICK) {
       onScroll?.(1);
       state.accum -= DEGREES_PER_TICK;
+      vibrate(8);
     }
     while (state.accum <= -DEGREES_PER_TICK) {
       onScroll?.(-1);
       state.accum += DEGREES_PER_TICK;
+      vibrate(8);
     }
   }, [onScroll]);
 
   const onRingPointerUp = useCallback((e) => {
+    vibrateReady = true;
     const state = ringState.current;
     ringState.current = null;
     if (!state) return;
@@ -86,11 +101,13 @@ export function useClickWheel({ onMenu, onPlayPause, onPrev, onNext, onScroll, o
 
   const onCenterPointerDown = useCallback((e) => {
     e.stopPropagation();
+    vibrate(10);
     onSelectStart?.();
   }, [onSelectStart]);
 
   const onCenterPointerUp = useCallback((e) => {
     e.stopPropagation();
+    vibrateReady = true;
     onSelectEnd?.();
   }, [onSelectEnd]);
 

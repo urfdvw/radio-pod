@@ -25,7 +25,7 @@ import './App.css';
 
 function AppInner() {
   const { current, push, pop, reset } = useNavigation();
-  const { play, togglePlayPause, setVolume, volume, currentStation } = useAudio();
+  const { play, preload, togglePlayPause, setVolume, volume, currentStation } = useAudio();
   const { stations } = useStationList();
   const { setBrightness } = useSettings();
 
@@ -42,7 +42,7 @@ function AppInner() {
   useEffect(() => {
     if (autoPlayedRef.current || !currentStation) return;
     autoPlayedRef.current = true;
-    play(currentStation);
+    preload(currentStation);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

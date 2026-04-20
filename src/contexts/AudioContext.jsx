@@ -61,6 +61,14 @@ export function AudioProvider({ children }) {
     return { gain, ctx };
   }, []);
 
+  const preload = useCallback((station) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.src = station.url_resolved || station.url;
+    audio.volume = volumeRef.current;
+    audio.load();
+  }, []);
+
   useEffect(() => {
     const audio = audioRef.current;
     if (!audio) return;
@@ -183,7 +191,7 @@ export function AudioProvider({ children }) {
   return (
     <AudioCtx.Provider value={{
       currentStation, isPlaying, isSeeking, volume, error,
-      play, togglePlayPause, setVolume,
+      play, preload, togglePlayPause, setVolume,
     }}>
       <audio ref={audioRef} />
       {children}
