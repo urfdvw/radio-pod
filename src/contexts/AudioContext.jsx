@@ -116,14 +116,16 @@ export function AudioProvider({ children }) {
       stopWhiteNoise();
     }
 
-    const isSameStation = currentStationRef.current?.stationuuid === station.stationuuid;
+    // readyState > 0 means audio has been loaded at least once; skip seek only then.
+    const isSameStation = currentStationRef.current?.stationuuid === station.stationuuid
+      && audio.readyState > 0;
     setCurrentStation(station);
     setError(null);
     onPlayingCbRef.current = onSuccess ?? null;
 
     if (isSameStation) {
       audio.volume = volumeRef.current;
-      audio.play().catch(() => setError('No Signal'));
+      audio.play().catch((err) => { if (err.name !== 'NotAllowedError') setError('No Signal'); });
       return;
     }
 
@@ -149,7 +151,7 @@ export function AudioProvider({ children }) {
       setIsSeeking(false);
       if (canPlay) {
         audio.volume = volumeRef.current;
-        audio.play().catch(() => setError('No Signal'));
+        audio.play().catch((err) => { if (err.name !== 'NotAllowedError') setError('No Signal'); });
       } else {
         setError('No Signal');
       }

@@ -41,19 +41,7 @@ function AppInner() {
   useEffect(() => {
     if (autoPlayedRef.current || !currentStation) return;
     autoPlayedRef.current = true;
-
-    const tryAutoPlay = () => {
-      play(currentStation);
-    };
-
-    tryAutoPlay();
-    window.addEventListener('click', tryAutoPlay, { once: true });
-    window.addEventListener('keydown', tryAutoPlay, { once: true });
-
-    return () => {
-      window.removeEventListener('click', tryAutoPlay);
-      window.removeEventListener('keydown', tryAutoPlay);
-    };
+    play(currentStation);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
