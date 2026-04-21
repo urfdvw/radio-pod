@@ -1,6 +1,8 @@
 # RadioMini
 
-**Listen to web radio as if it was 2004.**
+**Listen to web radio like it’s 2004.**
+
+https://radiomini.com 
 
 RadioMini runs entirely in your browser — no install, no account, no ads. Spin the click wheel to tune through 30,000+ live radio stations from around the world.
 
@@ -51,18 +53,18 @@ Open the app and use the click wheel:
 
 | Key | Action |
 |-----|--------|
-| Arrow keys | Navigate |
-| `Enter` | Select |
-| `Escape` | Back |
-| Any letter/number | Filter current list |
+| Up | MENU |
+| Down | Play/Pause |
+| Left | Previous Station |
+| Right | Next Station |
+| Enter | Center |
+| Mouse Scroll | Rotate |
 
 ---
 
 ## Running Locally
 
 ```bash
-git clone https://github.com/your-username/radio-pod.git
-cd radio-pod
 npm install
 npm run dev
 ```
@@ -90,19 +92,6 @@ Outputs a single self-contained `docs/index.html` — ready to deploy anywhere, 
 - **Battery Status API** — live battery indicator
 - **Vibration API** — haptic feedback on Android
 - **Zero dependencies** on UI frameworks, state managers, or CSS libraries
-
----
-
-## Browser Support
-
-| Browser | Status |
-|---------|--------|
-| Chrome (desktop / Android) | Full support |
-| Safari (iOS) | Full support (volume control display-only) |
-| Firefox | Full support |
-| Edge | Full support |
-
-iOS note: Apple does not allow JavaScript to control audio volume. The volume bar is visible but reflects the app's internal state only — use your device's volume buttons.
 
 ---
 
