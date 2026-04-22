@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef, useCallback, lazy, Suspense } from 'react';
 import { NavigationProvider, useNavigation } from './contexts/NavigationContext';
 import { SettingsProvider, useSettings } from './contexts/SettingsContext';
 import { AudioProvider, useAudio } from './contexts/AudioContext';
@@ -16,7 +16,7 @@ import StationList from './screens/StationList';
 import Settings from './screens/Settings';
 import BrightnessControl from './screens/BrightnessControl';
 import BodyColorPicker from './screens/BodyColorPicker';
-import QRScanner from './screens/QRScanner';
+const QRScanner = lazy(() => import('./screens/QRScanner'));
 import { useKeyboard } from './hooks/useKeyboard';
 import { useTypeToFilter } from './hooks/useTypeToFilter';
 import { useLongPress } from './hooks/useLongPress';
@@ -154,7 +154,7 @@ function AppInner() {
       case SCREENS.BODY_COLOR_PICKER:
         return <BodyColorPicker selectedIndex={si(SCREENS.BODY_COLOR_PICKER)} onRegisterActions={registerActions} />;
       case SCREENS.QR_SCANNER:
-        return <QRScanner />;
+        return <Suspense fallback={null}><QRScanner /></Suspense>;
       default:
         return <MainMenu selectedIndex={0} onRegisterActions={registerActions} />;
     }

@@ -1,30 +1,21 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
-import { viteSingleFile } from 'vite-plugin-singlefile'
-
-// iOS Safari refuses to execute inline <script type="module" crossorigin> —
-// the crossorigin attribute triggers a CORS check even on inline content.
-// Strip it after vite-plugin-singlefile has inlined scripts via generateBundle.
-const removeInlineCrossorigin = {
-  name: 'remove-inline-crossorigin',
-  enforce: 'post',
-  generateBundle(_options, bundle) {
-    for (const chunk of Object.values(bundle)) {
-      if (chunk.type === 'asset' && chunk.fileName.endsWith('.html')) {
-        chunk.source = String(chunk.source).replace(
-          /<script type="module" crossorigin>/g,
-          '<script type="module">'
-        );
-      }
-    }
-  },
-};
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), viteSingleFile(), removeInlineCrossorigin],
+  plugins: [react()],
   build: {
     outDir: 'docs',
+    // Long-lived cache for hashed assets; index.html stays short-lived
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'vendor';
+          }
+        },
+      },
+    },
   },
   test: {
     environment: 'jsdom',
