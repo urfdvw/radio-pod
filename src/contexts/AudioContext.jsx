@@ -1,5 +1,6 @@
 import { createContext, useContext, useRef, useState, useCallback, useEffect } from 'react';
 import { DEFAULT_STATION } from '../constants/defaultStation';
+import { isIOS } from '../utils/platform';
 
 const AudioCtx = createContext(null);
 
@@ -100,6 +101,26 @@ export function AudioProvider({ children }) {
     audio.addEventListener('playing', handlePlaying);
     audio.addEventListener('pause', handlePause);
     audio.addEventListener('error', handleError);
+
+    if (isIOS()) {
+      // On iOS, audio.volume is read-only (hardware controlled). Sync the
+      // volume bar by reading audio.volume whenever the system volume changes.
+      const handleVolumeChange = () => {
+        const v = audio.volume;
+        setVolumeState(v);
+        volumeRef.current = v;
+      };
+      // Initialise from current system volume
+      handleVolumeChange();
+      audio.addEventListener('volumechange', handleVolumeChange);
+      return () => {
+        audio.removeEventListener('playing', handlePlaying);
+        audio.removeEventListener('pause', handlePause);
+        audio.removeEventListener('error', handleError);
+        audio.removeEventListener('volumechange', handleVolumeChange);
+      };
+    }
+
     return () => {
       audio.removeEventListener('playing', handlePlaying);
       audio.removeEventListener('pause', handlePause);
