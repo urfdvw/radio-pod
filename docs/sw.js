@@ -1,4 +1,4 @@
-const CACHE = 'radiomini-v1';
+const CACHE = 'radiomini-v2';
 
 self.addEventListener('install', (e) => {
   e.waitUntil(caches.open(CACHE).then((c) => c.add('/')));
